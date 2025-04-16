@@ -1,10 +1,11 @@
 // lib/models/models.dart
+
 class Employee {
   int id;
   String email;
   String firstName;
   String lastName;
-  String role; // z.B. "user" oder "admin"
+  String role; // z. B. "user" oder "admin"
   bool isActivated;
   String password;
 
@@ -44,7 +45,6 @@ class Employee {
     };
   }
 
-  // Überschreibe operator == und hashCode, um auf die ID zu vergleichen
   @override
   bool operator ==(Object other) {
     if (identical(this, other)) return true;
@@ -55,13 +55,14 @@ class Employee {
   int get hashCode => id.hashCode;
 }
 
-
 class TimeStampRecord {
+  final int? id; // ID kann null sein, wenn der Eintrag gerade erstellt wurde
   DateTime clockIn;
   DateTime clockOut;
   String cashCount;
 
   TimeStampRecord({
+    this.id,
     required this.clockIn,
     required this.clockOut,
     required this.cashCount,
@@ -71,13 +72,14 @@ class TimeStampRecord {
 
   factory TimeStampRecord.fromJson(Map<String, dynamic> json) {
     return TimeStampRecord(
+      id: json['id'],
       clockIn: DateTime.parse(json['clockIn']),
       clockOut: DateTime.parse(json['clockOut']),
       cashCount: json['cashCount'].toString(),
     );
   }
 }
-// lib/models/models.dart
+
 class Shift {
   final int id;
   final String date; // Reines Datum im Format "YYYY-MM-DD"
@@ -99,11 +101,9 @@ class Shift {
         requestedEmployees = requestedEmployees ?? [];
 
   factory Shift.fromJson(Map<String, dynamic> json) {
-    // Konvertiere das Datum, falls es in ISO-Format vorliegt
     String rawDate = (json['shiftDate'] ?? json['date'])?.toString().trim() ?? "";
     String standardizedDate = rawDate.contains('T') ? rawDate.split('T')[0] : rawDate;
 
-    // Falls das JSON ein Feld "assignedEmployees" enthält, mappe es auf eine Liste von Employee-Objekten
     List<Employee> assigned = [];
     if (json['assignedEmployees'] != null) {
       assigned = (json['assignedEmployees'] as List)
@@ -111,7 +111,6 @@ class Shift {
           .toList();
     }
 
-    // Du kannst hier ähnlich auch "requestedEmployees" behandeln, falls gewünscht.
     return Shift(
       id: json['id'] ?? 0,
       date: standardizedDate,
@@ -119,12 +118,6 @@ class Shift {
       endTime: json['endTime'],
       description: json['description'],
       assignedEmployees: assigned,
-      // requestedEmployees: [...]  // Falls deine API auch dieses Feld liefert.
     );
   }
 }
-
-
-
-
-

@@ -175,6 +175,26 @@ class ApiService {
       return false;
     }
   }
+  /// Aktualisiert einen existierenden Zeiteintrag.
+  static Future<Map<String, dynamic>> updateTimeRecord({
+    required int timeRecordId,
+    required DateTime clockIn,
+    required DateTime clockOut,
+    required String cashCount,
+  }) async {
+    String pad(int n) => n.toString().padLeft(2, '0');
+    String convertToMySQLDateTime(DateTime dt) {
+      return '${dt.year}-${pad(dt.month)}-${pad(dt.day)} ${pad(dt.hour)}:${pad(dt.minute)}:${pad(dt.second)}';
+    }
+    final body = {
+      "clockIn": convertToMySQLDateTime(clockIn),
+      "clockOut": convertToMySQLDateTime(clockOut),
+      "cashCount": cashCount,
+    };
+    final result = await ApiHelper.put('/time-records/$timeRecordId', body);
+    return result;
+  }
+
 
   // Termine (Appointments)
 
