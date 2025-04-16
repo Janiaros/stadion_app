@@ -25,15 +25,16 @@ class _SplashPageState extends State<SplashPage> {
   Future<void> _checkLoginAndBackend() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     bool? isLoggedIn = prefs.getBool("isLoggedIn");
-
     await Future.delayed(const Duration(seconds: 2));
 
     bool backendOnline = false;
-    const int maxAttempts = 5;
-    for (int attempt = 1; attempt <= maxAttempts; attempt++) {
+    try {
+      print("🔍 [Splash] Pinge Backend…");
       backendOnline = await ApiService.ping();
-      if (backendOnline) break;
-      await Future.delayed(const Duration(seconds: 1));
+      print("✅ [Splash] ping() → $backendOnline");
+    } catch (e, st) {
+      print("❌ [Splash] ping() ERROR: $e\n$st");
+      backendOnline = false;
     }
 
     if (!backendOnline) {
@@ -43,7 +44,7 @@ class _SplashPageState extends State<SplashPage> {
       return;
     }
 
-    final userProvider = Provider.of<UserProvider>(context, listen: false);
+  final userProvider = Provider.of<UserProvider>(context, listen: false);
     await userProvider.loadCurrentUser();
 
     if (isLoggedIn == true && userProvider.currentUser != null) {
