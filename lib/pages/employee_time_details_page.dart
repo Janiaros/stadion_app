@@ -349,27 +349,6 @@ class _EmployeeTimeDetailsPageState extends State<EmployeeTimeDetailsPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          String report = "${widget.employee.name}\t${totalHours.toStringAsFixed(2)} Stunden";
-          Clipboard.setData(ClipboardData(text: report));
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text("Bericht kopiert!")),
-          );
-        },
-        backgroundColor: Colors.purple,
-        child: const Icon(Icons.copy, color: Colors.white),
-        tooltip: "Bericht kopieren",
-      ),
-      bottomNavigationBar: Container(
-        padding: const EdgeInsets.all(8.0),
-        color: Colors.grey[200],
-        child: Text(
-          "Mitarbeiterkosten (${DateFormat('MMMM', 'de_DE').format(selectedMonth)}): ${(totalHours * 12.82).toStringAsFixed(2)} €",
-          textAlign: TextAlign.center,
-          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
-        ),
-      ),
     );
   }
 
